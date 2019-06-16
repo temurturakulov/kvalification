@@ -254,6 +254,31 @@ namespace Повышение_квалификации
 		}
 
 		/// <summary>
+		/// Проверка логина
+		/// </summary>
+		/// <param name="login"></param>
+		/// <returns></returns>
+		public bool IsLoginExists(string login)
+		{
+			string query = @"select id from Авторизация
+								where login = '{0}'";
+
+			using (SqlConnection con = new SqlConnection(_connectionString))
+			using (SqlCommand command = new SqlCommand(string.Format(query, login)))
+			{
+				con.Open();
+				command.Connection = con;
+				SqlDataReader reader = command.ExecuteReader();
+				if (reader.HasRows) // если есть данные
+				{
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Регистрация  пользователя
 		/// </summary>
 		/// <param name="login"></param>

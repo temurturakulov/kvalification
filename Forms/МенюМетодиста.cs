@@ -140,13 +140,20 @@ namespace Повышение_квалификации
 					default:
 						break;
 				}
-				coursFormId = Convert.ToInt32(educationFormList.SelectedValue.ToString());
-				//courseVolume = Convert.ToInt32(textBox2.Text);
 
-				//coursTypeList.SelectedValue.
-				//!string.IsNullOrWhiteSpace(educationFormList.SelectedValue.ToString()) &&
-				textBox2.Clear();
-				textBox2.Clear();
+				bool valid = IsDateValid();
+
+				if (valid)
+				{
+					coursFormId = Convert.ToInt32(educationFormList.SelectedValue.ToString());
+
+					textBox2.Clear();
+					textBox2.Clear();
+				}
+				else
+				{
+					return;
+				}				
 			}
 			else
 			{
@@ -227,8 +234,19 @@ namespace Повышение_квалификации
 							break;
 					}
 
+					bool valid = IsDateValid();
+
+					if (valid)
+					{
+						coursFormId = Convert.ToInt32(educationFormList.SelectedValue.ToString());
+					}
+					else
+					{
+						return;
+					}
+
 					//coursTypeId = Convert.ToInt32(coursTypeList.SelectedValue.ToString());
-					coursFormId = Convert.ToInt32(educationFormList.SelectedValue.ToString());
+					//coursFormId = Convert.ToInt32(educationFormList.SelectedValue.ToString());
 					//courseVolume = Convert.ToInt32(textBox2.Text);
 				}
 				else
@@ -241,6 +259,32 @@ namespace Повышение_квалификации
 				this.coursesViewTableAdapter.Fill(this.coursesDataSet1.CoursesView1);
 				textBox1.Clear();
 				textBox2.Clear();
+			}
+		}
+
+		private bool IsDateValid()
+		{
+			int courseVolume = 0;
+			int coursTypeId = 0;
+			Int32.TryParse(textBox2.Text, out courseVolume);
+			DateTime date;
+
+			if (courseVolume > 0)
+			{
+				date = dateTimePicker1.Value.AddDays(courseVolume / 4);
+
+				if (dateTimePicker2.Value < date)
+				{
+					MessageBox.Show($"Дата окончания курса не должна быть меньше {date.ToString("dd.MM.yyyy")}");
+					return false;
+				}
+				return true;
+
+			}
+			else
+			{
+				MessageBox.Show("Объем курса должен быть больше 0!");
+				return false;
 			}
 		}
 
@@ -265,6 +309,172 @@ namespace Повышение_квалификации
 		{
 			_parent.Show();
 			//this.Close();
+		}
+
+		private void StartDateChanged(object sender, EventArgs e)
+		{
+			int courseVolume = 0;
+			int coursTypeId = 0;
+			Int32.TryParse(textBox2.Text, out courseVolume);
+			DateTime date;
+
+			if (courseVolume > 0)
+			{
+				date = dateTimePicker1.Value.AddDays(courseVolume / 4);
+				dateTimePicker2.Value = date;
+			}
+			else
+			{
+				MessageBox.Show("Объем курса должен быть больше 0!");
+			}			
+		}
+
+		private void EndDateChanged(object sender, EventArgs e)
+		{
+			int courseVolume = 0;
+			int coursTypeId = 0;
+			Int32.TryParse(textBox2.Text, out courseVolume);
+			DateTime date;
+
+			if (courseVolume > 0)
+			{
+				date = dateTimePicker1.Value.AddDays(courseVolume / 4);
+
+				if (dateTimePicker2.Value < date)
+				{
+					MessageBox.Show($"Дата окончания курса не должна быть меньше {date.ToString("dd.MM.yyyy")}");
+					return;
+				}
+				else
+				{
+					dateTimePicker2.Value = date;
+				}				
+			}
+			else
+			{
+				MessageBox.Show("Объем курса должен быть больше 0!");
+				return;
+			}
+		}
+
+		/*private void CourseVolumeChanged(object sender, EventArgs e)
+		{
+			int courseVolume = 0;
+			int coursTypeId = 0;
+			Int32.TryParse(textBox2.Text, out courseVolume);
+
+			if (courseVolume > 0)
+			{
+				switch ((int)coursTypeList.SelectedValue)
+				{
+					case (int)Повышение_квалификации.Data.CoursTypes.QualificationUpgrade:
+						if (Convert.ToInt32(textBox2.Text) >= 72)
+						{
+							courseVolume = Convert.ToInt32(textBox2.Text);
+							coursTypeId = Convert.ToInt32(coursTypeList.SelectedValue.ToString());
+						}
+						else
+						{
+							MessageBox.Show("Курс повышения квалификации не может длиться менее 72 часов");
+							return;
+						}
+
+						break;
+
+					case (int)Повышение_квалификации.Data.CoursTypes.RefresherCourse:
+						if (Convert.ToInt32(textBox2.Text) >= 250)
+						{
+							courseVolume = Convert.ToInt32(textBox2.Text);
+							coursTypeId = Convert.ToInt32(coursTypeList.SelectedValue.ToString());
+						}
+						else
+						{
+							MessageBox.Show("Курс переподготовки не может длиться менее 250 часов");
+							return;
+						}
+						break;
+
+					case (int)Повышение_квалификации.Data.CoursTypes.InternshipCourse:
+						if (Convert.ToInt32(textBox2.Text) > 0)
+						{
+							courseVolume = Convert.ToInt32(textBox2.Text);
+							coursTypeId = Convert.ToInt32(coursTypeList.SelectedValue.ToString());
+						}
+						else
+						{
+							MessageBox.Show("Время проведения стажировк быть больше 0 часов");
+							return;
+						}
+						break;
+
+					default:
+						break;
+				}
+			}
+			else
+			{
+				MessageBox.Show("Объем курса не должен быть пустым!");
+			}
+		}*/
+
+		private void CouseTextBoxLeave(object sender, EventArgs e)
+		{
+			int courseVolume = 0;
+			int coursTypeId = 0;
+			Int32.TryParse(textBox2.Text, out courseVolume);
+
+			if (courseVolume > 0)
+			{
+				switch ((int)coursTypeList.SelectedValue)
+				{
+					case (int)Повышение_квалификации.Data.CoursTypes.QualificationUpgrade:
+						if (Convert.ToInt32(textBox2.Text) >= 72)
+						{
+							courseVolume = Convert.ToInt32(textBox2.Text);
+							coursTypeId = Convert.ToInt32(coursTypeList.SelectedValue.ToString());
+						}
+						else
+						{
+							MessageBox.Show("Курс повышения квалификации не может длиться менее 72 часов");
+							return;
+						}
+
+						break;
+
+					case (int)Повышение_квалификации.Data.CoursTypes.RefresherCourse:
+						if (Convert.ToInt32(textBox2.Text) >= 250)
+						{
+							courseVolume = Convert.ToInt32(textBox2.Text);
+							coursTypeId = Convert.ToInt32(coursTypeList.SelectedValue.ToString());
+						}
+						else
+						{
+							MessageBox.Show("Курс переподготовки не может длиться менее 250 часов");
+							return;
+						}
+						break;
+
+					case (int)Повышение_квалификации.Data.CoursTypes.InternshipCourse:
+						if (Convert.ToInt32(textBox2.Text) > 0)
+						{
+							courseVolume = Convert.ToInt32(textBox2.Text);
+							coursTypeId = Convert.ToInt32(coursTypeList.SelectedValue.ToString());
+						}
+						else
+						{
+							MessageBox.Show("Время проведения стажировк быть больше 0 часов");
+							return;
+						}
+						break;
+
+					default:
+						break;
+				}
+			}
+			else
+			{
+				MessageBox.Show("Объем курса не должен быть пустым!");
+			}
 		}
 	}
 }

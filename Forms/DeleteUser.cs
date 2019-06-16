@@ -260,6 +260,8 @@ namespace Повышение_квалификации
 
 		private void button3_Click(object sender, EventArgs e)
 		{
+			DbWorker dbWorker = new DbWorker();
+
 			if (!string.IsNullOrEmpty(login.Text) &&
 				!string.IsNullOrWhiteSpace(login.Text) &&
 				!string.IsNullOrEmpty(password.Text) &&
@@ -304,16 +306,24 @@ namespace Повышение_квалификации
 
 					resultQuery = resultQuery + " " + string.Format(authQuery, dataGridView2[0, index].Value.ToString(), login.Text, password.Text);
 
-					ExecQuery(resultQuery);
-					this.userDataTableAdapter.Fill(this.coursesDataSet.UserData1);
+					if (!dbWorker.IsLoginExists(login.Text))
+					{
+						ExecQuery(resultQuery);
+						this.userDataTableAdapter.Fill(this.coursesDataSet.UserData1);
 
-					firstName.Clear();
-					midleName.Clear();
-					lastName.Clear();
-					login.Clear();
-					password.Clear();
+						firstName.Clear();
+						midleName.Clear();
+						lastName.Clear();
+						login.Clear();
+						password.Clear();
 
-					MessageBox.Show("Запись изменена");
+						MessageBox.Show("Запись изменена");
+					}
+					else
+					{
+						MessageBox.Show("Пользователь с таким логином уже существует!");
+					}
+					
 				}
 			}
 			else

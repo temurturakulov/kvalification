@@ -88,7 +88,7 @@ namespace Повышение_квалификации
 							where TABLE_NAME = 'TeacherCoursesView'; ";
 
 			string coursesQuery = @"
-								select distinct k.id,k.coursName, k.courseVolume, f.educationType,v.coursName as 'courseTypeName' --,o.teacherId 
+								select distinct k.id,k.coursName, k.courseVolume, f.educationType,v.coursName as 'courseTypeName',k.startDate, k.endDate --,o.teacherId 
 								from Курсы k
 								left join Обучение o
 								on o.coursId = k.id
@@ -117,7 +117,9 @@ namespace Повышение_квалификации
 				"Название курса",
 				"Объем курса",
 				"Форма обучения",
-				"Вид курса"
+				"Вид курса",
+				"Дата начала",
+				"Дата окончания"
 			};
 
 			/*using (SqlConnection connection = dbWorker.GetConnection())
@@ -153,7 +155,7 @@ namespace Повышение_квалификации
 				while (reader.Read())
 				{
 					//dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetString(3), reader.GetString(4), reader["teacherId"] );
-					dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetString(3), reader.GetString(4));
+					dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetString(3), reader.GetString(4), reader.GetValue(5), reader.GetValue(6));
 				}
 				connection.Close();
 			}

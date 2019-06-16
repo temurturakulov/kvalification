@@ -230,17 +230,26 @@ namespace Повышение_квалификации
 			if (Helpers.GetDialogResult("Вы действительно хотите добавить запись?", "Добавление записи"))
 			{
 				DbWorker dbWorker = new DbWorker();
-				dbWorker.RegisterUser(textBox6.Text, textBox7.Text, textBox8.Text, textBox9.Text, textBox10.Text, dateTimePicker2.Value, role);
 
-				textBox6.Clear();
-				textBox7.Clear();
-				textBox8.Clear();
-				textBox9.Clear();
-				textBox10.Clear();
+				if (!dbWorker.IsLoginExists(textBox6.Text))
+				{
+					dbWorker.RegisterUser(textBox6.Text, textBox7.Text, textBox8.Text, textBox9.Text, textBox10.Text, dateTimePicker2.Value, role);
+
+					textBox6.Clear();
+					textBox7.Clear();
+					textBox8.Clear();
+					textBox9.Clear();
+					textBox10.Clear();
+					MessageBox.Show("Запись добавлена");
+				}
+				else
+				{
+					MessageBox.Show("Пользователь с таким логином существует!");
+				}
 
 				this.userDataTableAdapter.Fill(this.coursesDataSet.UserData1);
 				dataGridView1.Refresh();
-				MessageBox.Show("Запись добавлена");
+				
 			}
 			else
 			{
